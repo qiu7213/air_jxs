@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    为这个mapper指定一个唯一的namespace，namespace的值习惯上设置成:包名+sql映射文件名，这样就能够保证namespace的值是唯一的
+     例如namespace="cn.my.dao.userMapper"就是cn.my.dao(包名)+userMapper(userMapper.java文件去除后缀)
+  -->
+<mapper namespace="com.example.demo.mapper.PlaceMapper">
+
+    <!-- 自己定义一个  resultMap ，  数据返回的结果集就可以直接填写这个 resultMap的ID-->
+    <!--
+            根据id查询得到一个user对象
+           1.在select标签中编写查询的SQL语句， 设置select标签的id属性为getUser，id属性值必须是唯一的，不能够重复
+           2.使用parameterType属性指明查询时使用的参数类型，resultType属性指明查询返回的结果集类型
+          3.resultType= "cn.my.po.User" 就表示将查询结果封装成一个User类的对象返回 。User类就是user表所对应的实体类
+     -->
+
+    <resultMap id="placeMap" type="com.example.demo.custom.PlaceCustom">
+        <id column="id" property="id"></id>
+        <result column="name" property="placeName"  />
+        <result column="username" property="UserName" />
+        <result column="state" property="placeState" />
+        <result column="address" property="address" />
+        <result column="creattime" property="creatTime" />
+    </resultMap>
+
+
+
+
+
+    <select id="userPlaceInfo"   parameterType="java.lang.Integer" resultType="com.example.demo.custom.PlaceCustom" >
+        select user`.name ,`user`.username ,`user`.address, `user`.phone1 ,place.place,place.userid,place.state,place.creattime  from user LEFT JOIN place on `user`.id = place.userid where `user`.id = #{id}
+    </select>
+
+    <select id="userPlaceInfo2"   parameterType="java.lang.Integer" resultType="com.example.demo.custom.PlaceCustom" >
+       select place.* ,`user`.id,`user`.`name`,`user`.username,`user`.address  from place , user where place.userid = `user`.id and `user`.id = #{id};
+    </select>
+
+    <select id="findPlaceByUserID"   parameterType="java.lang.Integer"  resultType="com.example.demo.custom.PlaceCustom" >
+        select place.id ,place.place placeName,place.userid ,place.creattime ,place.state placeState,`user`.id,`user`.`name`,`user`.username,`user`.address,`user`.phone1  phone from place , user where place.userid = `user`.id and `user`.id = #{id};
+    </select>
+
+
+</mapper>
